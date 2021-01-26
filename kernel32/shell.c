@@ -159,7 +159,7 @@ static char *get_cmd_token(char *cmd, size_t offset)
 	if (!cmd || *cmd == '\0')
 		return NULL;
 
-	while (*cmd == ' ')
+	while (*cmd == ' ') //直到检测到 ' '
 		cmd++;
 
 	if (*cmd == '\'')
@@ -172,26 +172,26 @@ static char *get_cmd_token(char *cmd, size_t offset)
 		in_bracket = 2;
 		cmd++;
 	}
-	else
-		in_bracket = 0;
+	else //如果都不包含\和"
+		in_bracket = 0; //不是括号
 
 	start = cmd;
 
-	while ((in_bracket || *cmd != ' ') && *cmd != '\0')
+	while ((in_bracket || *cmd != ' ') && *cmd != '\0') //如果是括号
 	{
 		if ((*cmd == '\'' && in_bracket == 1) ||
 			(*cmd == '"' && in_bracket == 2))
 		{
-			*cmd = '\0';
+			*cmd = '\0'; //截断
 			break;
 		}
 
-		cmd++;
+		cmd++; //运行到最后
 	}
 
 	if (*cmd != '\0')
 		*cmd = '\0';
-
+    printf("start is %s\n", start);
 	return start;
 }
 
@@ -204,6 +204,7 @@ static int exec_cmd(char *cmd)
 	int offset = 0;
 	char **argv = (char **) kalloc(sizeof(char **) * SHELL_MAX_ARGC);
 
+	printf("cmd is %s\n", cmd);
 	while (argv[argc] = get_cmd_token(cmd, offset))
 	{
 		offset += strlen(argv[argc]) + 1;
